@@ -10,6 +10,10 @@
 #
 
 
+
+
+### ground= instanciate(variables replaced by constants)
+### unground= predicate or operator only with variables
 import time
 from strips import *
 
@@ -97,15 +101,21 @@ goal_state    = [ Floor(c), On(d,c), On(e,d), On(a,e), Floor(b) ]
 
 
 print('Substitute:',On(X,Y).substitute({ X : a, Y : b, Z : c}))
+#On(X,Y).substitute({'X':'d','Y':'a'})
+
 
 print('Instanciate:',Stack.instanciate([a,b]))
 
 
-bwdomain = STRIPS()
+
+
+bwdomain = STRIPS() #domain of strips
 
 print('Actions:',bwdomain.actions(initial_state))
+actionlist=bwdomain.actions(initial_state)
+print(bwdomain.result(initial_state,actionlist[0]))
 
-"""
+
 # uncomment to test
 
 inittime = time.time()
@@ -117,6 +127,6 @@ t.search()
 print(t.plan)
 print('time=',time.time()-inittime)
 print(len(t.open_nodes),' nodes')
-"""
+
 
 

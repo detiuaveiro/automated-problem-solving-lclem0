@@ -49,3 +49,7 @@ def test_exercicio6(braga_faro):
 
     assert t.search() == ['Braga', 'Porto', 'Agueda', 'Aveiro', 'Coimbra', 'Leiria', 'Castelo Branco', 'Santarem', 'Lisboa', 'Evora', 'Beja', 'Faro']
     assert round(t.avg_branching,2) == round((19+11-1)/11,2)
+    
+    
+#resolver cada teste por aula e corrigir(prox semana - test_aula4.py)
+# pytest tests/test_aula3.py

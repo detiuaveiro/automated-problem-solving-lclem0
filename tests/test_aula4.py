@@ -10,7 +10,7 @@ def test_exercicio7(braga_faro):
     assert cidades_portugal.cost('Agueda', ('Agueda', 'Aveiro')) == 35
     assert cidades_portugal.cost('Aveiro', ('Aveiro', 'Lisboa')) == None 
 
-def test_exercicio8(braga_faro):
+def test_exercicio8(braga_faro):   #ver erro neste
     t = SearchTree(braga_faro, 'depth')
 
     assert t.search() == ['Braga', 'Porto', 'Agueda', 'Aveiro', 'Coimbra', 'Leiria', 'Castelo Branco', 'Santarem', 'Lisboa', 'Evora', 'Beja', 'Faro']

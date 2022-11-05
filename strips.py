@@ -34,7 +34,8 @@ class Predicate:
             return type(self)(assign[la[0]])
         # add other cases if needed
         return type(self)(assign[la[0]],assign[la[1]])
-
+    def __hash__(self):    #required  for using sets of predicates
+        return hash(str(self))
 
 # STRIPS operators
 # -- operators for a specific domain will be subclasses
@@ -63,9 +64,9 @@ class Operator:
         if len(args)!=len(cls.args):
             return None
         assign = dict(zip(cls.args, args))
-        pc  = [ p.substitute(assign) for p in cls.pc ]
-        neg = [ p.substitute(assign) for p in cls.neg ]
-        pos = [ p.substitute(assign) for p in cls.pos ]
+        pc  = [ p.substitute(assign) for p in cls.pc ]          # precondition subtitute uses dictioary and is on predicate
+        neg = [ p.substitute(assign) for p in cls.neg ]          #negative effects
+        pos = [ p.substitute(assign) for p in cls.pos ]         # positive effects
         return cls(args,pc,neg,pos)
 
 
@@ -78,22 +79,29 @@ class STRIPS(SearchDomain):
 
     # list of applicable actions in a given "state"
     def actions(self, state):
-        constants = state_constants(state)
-        operators = Operator.__subclasses__()
+        constants = state_constants(state)  # constants in the state (a,b,c,...)
+        operators = Operator.__subclasses__()  #operators in the domain
         actions = []
-        for op in operators:
-            lassign = assignments(op.args,constants)
-            for assign in lassign:
-                argvalues = [assign[a] for a in op.args]
-                action = op.instanciate(argvalues)
-                if all(c in state for c in action.pc):
-                    actions.append(action)
-        return actions
+        for op in operators:                # for each operator in the domain
+            lassign = assignments(op.args,constants)    # possible assignments
+            for assign in lassign:                    # for each assignment 
+                argvalues = [assign[a] for a in op.args]    # get the values
+                action = op.instanciate(argvalues)   # instanciate the operator
+                if all(c in state for c in action.pc):      # check precondition
+                    actions.append(action)  
+        return actions 
 
     # Result of a given "action" in a given "state"
     # ( returns None, if the action is not applicable in the state)
     def result(self, state, action):
-        pass
+        #check precondition
+        if not all(c in state for c in action.pc):
+            return None
+        #removing negative effects and adding positive effects
+        newstate = [c for c in state if c not in action.neg]    #remove negative effects
+        newstate.extend(action.pos)
+        return newstate            
+
 
     def cost(self, state, action):
         return 1
@@ -103,7 +111,7 @@ class STRIPS(SearchDomain):
 
     # Checks if a given "goal" is satisfied in a given "state"
     def satisfies(self, state, goal):
-        pass
+        return all(c in state for c in goal)
 
 
 

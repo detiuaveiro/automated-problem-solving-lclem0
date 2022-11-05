@@ -10,8 +10,9 @@
 #
 
 
+from cmath import sqrt
 from tree_search import *
-
+import math
 class Cidades(SearchDomain):
     def __init__(self,connections, coordinates):
         self.connections = connections
@@ -28,10 +29,16 @@ class Cidades(SearchDomain):
         (C1,C2) = action
         if C1==city:
             return C2
-    def cost(self, city, action):
-        pass
-    def heuristic(self, city, goal_city):
-        pass
+    def cost(self, city, action): #ex 7 aula4.py
+        if action[0]!=city: 
+            return None
+        for  (X,Y,D) in self.connections:
+            if action[0] in [X,Y] and action[1] in [X,Y] :
+                return D
+    def heuristic(self, city, goal_city):   #ex 11 aula5.py
+        (X1,Y1) = self.coordinates[city]
+        (X2,Y2) = self.coordinates[goal_city]
+        return sqrt((X1-X2)**2 + (Y1-Y2)**2)
     def satisfies(self, city, goal_city):
         return goal_city==city
 
@@ -76,7 +83,7 @@ cidades_portugal = Cidades(
                       ('Portalegre','Santarem', 157),
                       ('Portalegre','Evora', 194) ],
 
-                    # City coordinates
+                    # City coordinates	dictionary
                      { 'Aveiro': (41,215),
                        'Figueira': ( 24, 161),
                        'Coimbra': ( 60, 167),
@@ -104,9 +111,10 @@ cidades_portugal = Cidades(
 
 p = SearchProblem(cidades_portugal,'Braga','Faro')
 t = SearchTree(p,'breadth')
+z = SearchTree(p,'depth')
 
 print(t.search())
-
+print(z.search())
 
 # Atalho para obter caminho de c1 para c2 usando strategy:
 def search_path(c1,c2,strategy):
@@ -114,6 +122,38 @@ def search_path(c1,c2,strategy):
     my_tree = SearchTree(my_prob)
     my_tree.strategy = strategy
     return my_tree.search()
+
+#cidades_portugal.actions('Aveiro')
+#cidades_portugal.result('Aveiro',('Aveiro','Porto')
+#t
+#t.strategy
+#t.problem.initial
+#t.problem.goal
+#t.solution
+#t.get_path(t.solution)		gets path from node to solution	braga-faro
+#t.get_path(t.solution.parent)	gets path from solution to parent faro-braga
+#t.solution.parent			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
